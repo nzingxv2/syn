@@ -1,0 +1,30 @@
+name: Generate Favicon
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-favicon:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create src folder and download favicon
+        run: |
+          wget -O _media/favicon.svg "https://api.dicebear.com/9.x/identicon/svg?seed=syn"
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "🔧 Generate fresh favicon with Dicebear bottts" || echo "No changes"
+          git push origin main
